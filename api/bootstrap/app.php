@@ -13,10 +13,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->statefulApi();
-        $middleware->validateCsrfTokens(except: [
-            'http://localhost:8000/*',
-            'http://localhost:8000/api/*',
-        ]);
+        // $middleware->validateCsrfTokens(except: [
+        //     'http://localhost:8000/*',
+        //     'http://localhost:8000/api/*',
+        // ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
