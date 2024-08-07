@@ -22,12 +22,12 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/prefetch-feature
-    // preFetch: true,
+    preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli-vite/boot-files
-    boot: ['axios'],
+    boot: ['axios', { path: 'fetchUser', client: false }],
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -35,7 +35,7 @@ module.exports = configure(function (/* ctx */) {
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
       // 'ionicons-v4',
-      // 'mdi-v7',
+      'mdi-v7',
       // 'fontawesome-v6',
       // 'eva-icons',
       // 'themify',
@@ -76,7 +76,10 @@ module.exports = configure(function (/* ctx */) {
 
       // publicPath: '/',
       // analyze: true,
-      // env: {},
+      env: {
+        APP_URL: process.env.API_URL ?? 'http://localhost:8080',
+        API_URL: process.env.API_URL ?? 'http://localhost:8080',
+      },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
@@ -96,6 +99,12 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       port: 8080,
+      proxy: {
+        '/api': 'http://127.0.0.1:8000',
+        '/login': 'http://127.0.0.1:8000',
+        '/logout': 'http://127.0.0.1:8000',
+        '/sanctum': 'http://127.0.0.1:8000',
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
@@ -113,7 +122,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [],
+      plugins: ['Notify', 'Cookies'],
     },
 
     // animations: 'all', // --- includes all animations
