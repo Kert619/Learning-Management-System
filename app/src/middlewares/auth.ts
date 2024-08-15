@@ -7,10 +7,9 @@ export const auth = async (
   next: NavigationGuardNext
 ) => {
   const authStore = useAuthStore();
-
   if (authStore.user) {
     next();
   } else {
-    next('/');
+    next({ path: '/' });
   }
 };

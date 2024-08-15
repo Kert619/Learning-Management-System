@@ -22,10 +22,18 @@ const routes: RouteRecordRaw[] = [
       role: 'admin',
     },
   },
+  {
+    path: '/user',
+    component: () => import('layouts/MainLayout.vue'),
+    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    beforeEnter: [auth, role],
+    meta: {
+      role: 'user',
+    },
+  },
   // Always leave this as last one,
   // but you can also remove it
   {
-    name: 'error',
     path: '/:catchAll(.*)*',
     component: () => import('pages/ErrorNotFound.vue'),
   },

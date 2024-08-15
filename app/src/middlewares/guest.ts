@@ -10,6 +10,6 @@ export const guest = async (
   if (!authStore.user) return next();
 
   if (authStore.user.role == 'admin') {
-    next('/admin');
+    next({ path: '/admin' });
   }
 };
