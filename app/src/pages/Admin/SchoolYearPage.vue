@@ -1,0 +1,5 @@
+<template>
+  <div>School year page</div>
+</template>
+
+<script setup lang="ts"></script>

@@ -78,7 +78,7 @@ module.exports = configure(function (/* ctx */) {
       // analyze: true,
       env: {
         APP_URL: process.env.API_URL ?? 'http://localhost:8080',
-        API_URL: process.env.API_URL ?? 'http://localhost:8080',
+        API_URL: process.env.API_URL ?? 'http://localhost:8000',
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
@@ -99,12 +99,6 @@ module.exports = configure(function (/* ctx */) {
       // https: true
       open: true, // opens browser window automatically
       port: 8080,
-      proxy: {
-        '/api': 'http://127.0.0.1:8000',
-        '/login': 'http://127.0.0.1:8000',
-        '/logout': 'http://127.0.0.1:8000',
-        '/sanctum': 'http://127.0.0.1:8000',
-      },
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework

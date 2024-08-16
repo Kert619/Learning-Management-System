@@ -6,17 +6,30 @@ import { role } from 'src/middlewares/role';
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
+    redirect: '/login',
+  },
+
+  {
+    path: '/login',
     component: () => import('layouts/LoginLayout.vue'),
     children: [
       { path: '', component: () => import('pages/Auth/LoginPage.vue') },
     ],
     beforeEnter: [guest],
   },
-
   {
     path: '/admin',
     component: () => import('layouts/MainLayout.vue'),
-    children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
+    children: [
+      {
+        path: '',
+        component: () => import('pages/IndexPage.vue'),
+      },
+      {
+        path: 'school-year',
+        component: () => import('pages/Admin/SchoolYearPage.vue'),
+      },
+    ],
     beforeEnter: [auth, role],
     meta: {
       role: 'admin',

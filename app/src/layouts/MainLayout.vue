@@ -38,21 +38,23 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-      class="bg-grey-2"
-      :width="240"
-    >
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="240">
       <q-scroll-area class="fit">
         <q-list padding class="text-primary">
-          <q-item v-for="link in links" :key="link.text" v-ripple clickable>
+          <q-item
+            v-for="menu in menus"
+            :key="menu.text"
+            :to="menu.link"
+            v-ripple
+            clickable
+            :focused="route.path === menu.link"
+          >
             <q-item-section avatar>
-              <q-icon color="primary" :name="link.icon" />
+              <q-icon color="primary" :name="menu.icon" />
             </q-item-section>
+
             <q-item-section>
-              <q-item-label>{{ link.text }}</q-item-label>
+              <q-item-label>{{ menu.text }}</q-item-label>
             </q-item-section>
           </q-item>
         </q-list>
@@ -67,17 +69,19 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
   leftDrawerOpen.value = !leftDrawerOpen.value;
 };
 
-const links: { icon: string; text: string }[] = [
-  { icon: 'calendar_month', text: 'School Year' },
-  { icon: 'library_books', text: 'Courses' },
-  { icon: 'group', text: 'Instructors' },
-  { icon: 'cable', text: 'Course Assignment' },
+const menus: { icon: string; text: string; link: string }[] = [
+  { icon: 'calendar_month', text: 'School Year', link: '/admin/school-year' },
+  { icon: 'library_books', text: 'Courses', link: '' },
+  { icon: 'group', text: 'Instructors', link: '' },
+  { icon: 'cable', text: 'Course Assignment', link: '' },
 ];
 </script>
