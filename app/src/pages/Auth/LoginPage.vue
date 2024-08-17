@@ -12,12 +12,12 @@
         <q-card-section class="column q-gutter-md">
           <q-input
             outlined
-            v-model.lazy="form.email"
+            v-model="form.email"
             dense
             label="Email"
             :error="v$.email.$error"
             :error-message="v$.email.$errors[0]?.$message.toString()"
-            @blur="v$.email.$validate"
+            @blur="handleBlur('email')"
           >
             <template #prepend>
               <q-icon
@@ -29,13 +29,13 @@
 
           <q-input
             outlined
-            v-model.lazy="form.password"
+            v-model="form.password"
             dense
             label="Password"
             type="password"
             :error="v$.password.$error"
             :error-message="v$.password.$errors[0]?.$message.toString()"
-            @blur="v$.password.$validate"
+            @blur="handleBlur('password')"
           >
             <template #prepend>
               <q-icon
@@ -91,7 +91,7 @@ const form: Ref<LoginCredential> = ref({
   password: '',
 });
 
-const rules = computed(() => {
+const rules = computed((): { [K in keyof LoginCredential]: object } => {
   return {
     email: {
       required: helpers.withMessage('Email is required', required),
@@ -104,10 +104,17 @@ const rules = computed(() => {
   };
 });
 
-const v$ = useVuelidate(rules, form);
+const v$ = useVuelidate(rules, ref({ ...form.value }));
+
+const handleBlur = (field: keyof LoginCredential) => {
+  v$.value[field].$model = form.value[field];
+  v$.value[field].$touch();
+};
 
 const handleSubmit = async () => {
-  const isFormCorrect = await v$.value.$validate();
+  let isFormCorrect = !v$.value.$error;
+
+  if (!v$.value.$dirty) isFormCorrect = await v$.value.$validate();
 
   if (!isFormCorrect) return;
 

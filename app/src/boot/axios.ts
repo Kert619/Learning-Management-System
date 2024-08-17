@@ -18,8 +18,13 @@ declare module '@vue/runtime-core' {
 const api = axios.create({
   baseURL: process.env.API_URL + '/api',
   withCredentials: true,
+  withXSRFToken: true,
 });
-const web = axios.create({ baseURL: process.env.API_URL });
+const web = axios.create({
+  baseURL: process.env.API_URL,
+  withCredentials: true,
+  withXSRFToken: true,
+});
 
 export default boot(({ app, ssrContext }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
