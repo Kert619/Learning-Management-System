@@ -12,13 +12,14 @@ class SchoolYearController extends Controller
     use HttpResponse;
 
     protected static string $modelName = SchoolYear::class;
-    protected static array $indexColumns = ['school_year', 'status'];
+    protected static array $indexColumns = ['id', 'school_year', 'status'];
     protected static array $orderBy = ['school_year'];
 
     protected function storeValidations(): array
     {
         return [
-            'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')]
+            'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')],
+            'status' => ['nullable', 'string', Rule::in(['open', 'close'])]
         ];
     }
 
