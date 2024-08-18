@@ -15,14 +15,19 @@
             v-model="form.email"
             dense
             label="Email"
-            :error="v$.email.$error"
+            :error="(v$.email.$error && !v$.email.$pending) || loginFailed"
             :error-message="v$.email.$errors[0]?.$message.toString()"
             @blur="handleBlur('email')"
+            :loading="v$.email.$pending"
           >
             <template #prepend>
               <q-icon
                 name="mdi-email-outline"
-                :color="v$.email.$error ? 'negative' : ''"
+                :color="
+                  (v$.email.$error && !v$.email.$pending) || loginFailed
+                    ? 'negative'
+                    : ''
+                "
               />
             </template>
           </q-input>
@@ -33,20 +38,21 @@
             dense
             label="Password"
             type="password"
-            :error="v$.password.$error"
+            :error="v$.password.$error || loginFailed"
             :error-message="v$.password.$errors[0]?.$message.toString()"
             @blur="handleBlur('password')"
           >
             <template #prepend>
               <q-icon
                 name="mdi-lock-outline"
-                :color="v$.password.$error ? 'negative' : ''"
+                :color="v$.password.$error || loginFailed ? 'negative' : ''"
               />
             </template>
           </q-input>
 
           <div>
-            <span class="text-subtitle text-grey-7 cursor-pointer text-italic"
+            <span
+              class="text-subtitle text-grey-7 cursor-pointer text-italic forgot-password"
               >Forgot Password?</span
             >
           </div>
@@ -65,7 +71,7 @@
         <q-card-section>
           <div class="text-subtitle text-grey-7">
             Don't have an account yet?
-            <span class="text-primary cursor-pointer text-weight-bold"
+            <span class="text-primary cursor-pointer text-weight-bold sign-up"
               >Sign up</span
             >
           </div>
@@ -85,6 +91,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const authStore = useAuthStore();
 const loading = ref(false);
+const loginFailed = ref(false);
 
 const form: Ref<LoginCredential> = ref({
   email: '',
@@ -96,6 +103,21 @@ const rules = computed((): { [K in keyof LoginCredential]: object } => {
     email: {
       required: helpers.withMessage('Email is required', required),
       email: helpers.withMessage('Must be a valid email', email),
+      // isUnique: helpers.withMessage(
+      //   'This email is already taken',
+      //   helpers.withAsync(async () => {
+      //     //stop async validation if sync validation fails
+      //     if (
+      //       v$.value.email['required'].$invalid ||
+      //       v$.value.email['email'].$invalid
+      //     )
+      //       return true;
+
+      //     return new Promise((resolve) => {
+      //       setTimeout(() => resolve(false), 5000);
+      //     });
+      //   })
+      // ),
     },
 
     password: {
@@ -104,7 +126,7 @@ const rules = computed((): { [K in keyof LoginCredential]: object } => {
   };
 });
 
-const v$ = useVuelidate(rules, ref({ ...form.value }));
+const v$ = useVuelidate(rules, ref({ ...form.value }), { $lazy: true });
 
 const handleBlur = (field: keyof LoginCredential) => {
   v$.value[field].$model = form.value[field];
@@ -119,14 +141,16 @@ const handleSubmit = async () => {
   if (!isFormCorrect) return;
 
   loading.value = true;
+  loginFailed.value = false;
 
-  try {
-    await authStore.login(form.value);
-    await authStore.getUser();
-    router.replace('/admin');
-  } catch (error) {}
-
-  loading.value = false;
+  authStore
+    .login(form.value)
+    .then(async () => {
+      await authStore.getUser();
+      router.replace('/admin');
+    })
+    .catch(() => (loginFailed.value = true))
+    .finally(() => (loading.value = false));
 };
 </script>
 
@@ -134,5 +158,13 @@ const handleSubmit = async () => {
 .login-form {
   width: 100%;
   max-width: 400px;
+}
+
+.forgot-password:hover {
+  text-decoration: underline;
+}
+
+.sign-up:hover {
+  text-decoration: underline;
 }
 </style>
