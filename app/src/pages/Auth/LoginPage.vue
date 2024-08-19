@@ -1,6 +1,6 @@
 <template>
   <q-page padding class="flex flex-center">
-    <q-form class="login-form text-center bg-white" @submit="handleSubmit">
+    <q-form class="login-form text-center" @submit="handleSubmit">
       <q-card>
         <q-card-section>
           <div class="text-h6 text-primary">Welcome</div>
@@ -18,6 +18,7 @@
             :error="(v$.email.$error && !v$.email.$pending) || loginFailed"
             :error-message="v$.email.$errors[0]?.$message.toString()"
             @blur="handleBlur('email')"
+            @keydown.enter="handleBlur('email')"
             :loading="v$.email.$pending"
           >
             <template #prepend>
@@ -41,6 +42,7 @@
             :error="v$.password.$error || loginFailed"
             :error-message="v$.password.$errors[0]?.$message.toString()"
             @blur="handleBlur('password')"
+            @keydown.enter="handleBlur('password')"
           >
             <template #prepend>
               <q-icon

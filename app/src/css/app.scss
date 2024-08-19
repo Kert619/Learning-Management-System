@@ -1,1 +1,11 @@
 // app global css in SCSS form
+.body--light {
+    background: $grey-1;
+}
+body.body--dark {
+    background: $dark
+}
+
+.q-drawer{
+    background: inherit;
+}

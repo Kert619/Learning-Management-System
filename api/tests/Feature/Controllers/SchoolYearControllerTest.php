@@ -4,6 +4,7 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\SchoolYear;
 use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -100,7 +101,8 @@ class SchoolYearControllerTest extends TestCase
         $response->assertNoContent();
 
         //verify records
-        $this->assertDatabaseMissing('school_years', ['id' => $schoolYear->id]);
+        $this->expectException(ModelNotFoundException::class);
+        SchoolYear::query()->findOrFail($schoolYear->id);
     }
 
     public function test_set_school_year_status()

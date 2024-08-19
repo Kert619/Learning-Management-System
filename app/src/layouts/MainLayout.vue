@@ -1,5 +1,5 @@
 <template>
-  <q-layout view="hHh lpR fFf" class="bg-grey-1">
+  <q-layout view="hHh lpR fFf">
     <q-header class="bg-primary text-grey-1 q-py-xs" height-hint="58">
       <q-toolbar>
         <q-btn
@@ -32,7 +32,33 @@
             <q-avatar size="26px">
               <img src="https://cdn.quasar.dev/img/boy-avatar.png" />
             </q-avatar>
-            <q-tooltip>Account</q-tooltip>
+            <q-menu>
+              <q-list style="min-width: 100px" dense>
+                <q-item clickable>
+                  <q-item-section avatar>
+                    <q-toggle
+                      v-model="$q.dark.isActive"
+                      icon="alarm"
+                      size="sm"
+                      label="Theme"
+                      left-label
+                      checked-icon="mdi-brightness-3"
+                      unchecked-icon="mdi-brightness-5"
+                    />
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup>
+                  <q-item-section>Change Password</q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable v-close-popup @click="handleLogout">
+                  <q-item-section>Logout</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
           </q-btn>
         </div>
       </q-toolbar>
@@ -40,7 +66,7 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="240">
       <q-scroll-area class="fit">
-        <q-list padding class="text-primary">
+        <q-list padding>
           <q-item
             v-for="menu in menus"
             :key="menu.text"
@@ -50,7 +76,7 @@
             :focused="route.path === menu.link"
           >
             <q-item-section avatar>
-              <q-icon color="primary" :name="menu.icon" />
+              <q-icon :name="menu.icon" />
             </q-item-section>
 
             <q-item-section>
@@ -68,10 +94,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useQuasar } from 'quasar';
+import { useAuthStore } from 'src/stores/auth';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 
+const $q = useQuasar();
 const route = useRoute();
+const authStore = useAuthStore();
 const leftDrawerOpen = ref(false);
 
 const toggleLeftDrawer = () => {
@@ -84,4 +114,18 @@ const menus: { icon: string; text: string; link: string }[] = [
   { icon: 'group', text: 'Instructors', link: '' },
   { icon: 'cable', text: 'Course Assignment', link: '' },
 ];
+
+const handleLogout = async () => {
+  authStore.logout().then(() => {
+    window.location.reload();
+  });
+};
+
+watch(
+  () => $q.dark.isActive,
+  (newVal) => {
+    $q.dark.set(newVal);
+    $q.localStorage.set('color_scheme', newVal ? 'true' : 'false');
+  }
+);
 </script>
