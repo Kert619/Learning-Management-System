@@ -1,6 +1,6 @@
 <template>
-  <q-layout view="hHh lpR fFf">
-    <q-header class="bg-primary text-grey-1 q-py-xs" height-hint="58">
+  <q-layout view="hHh LpR fFf">
+    <q-header class="bg-primary q-py-xs" height-hint="58">
       <q-toolbar>
         <q-btn
           flat

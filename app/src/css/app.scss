@@ -1,11 +1,13 @@
 // app global css in SCSS form
 .body--light {
     background: $grey-1;
-}
-body.body--dark {
-    background: $dark
+    color: $grey-9;
 }
 
-.q-drawer{
-    background: inherit;
+body.body--dark {
+    background: $dark;
+}
+
+.q-toolbar{
+    min-height: 40px!important;
 }
