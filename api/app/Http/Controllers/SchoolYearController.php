@@ -13,7 +13,7 @@ class SchoolYearController extends Controller
 
     protected static string $modelName = SchoolYear::class;
     protected static array $indexColumns = ['id', 'school_year', 'status'];
-    protected static array $orderBy = ['school_year'];
+    protected static array $orderBy = ['id' => 'desc'];
 
     protected function storeValidations(): array
     {
@@ -38,13 +38,45 @@ class SchoolYearController extends Controller
         ];
     }
 
+    public function store(Request $request)
+    {
+        $response = parent::store($request);
+
+        $data = json_decode($response->getContent(), true);
+
+        $id = $data['data']['id'];
+        $status = $data['data']['status'];
+
+        if ($status === 'open') {
+            SchoolYear::query()->where('id', '!=', $id)->update(['status' => 'close']);
+        }
+
+        return $response;
+    }
+
+    public function update(Request $request, $id)
+    {
+        $response = parent::update($request, $id);
+
+        $data = json_decode($response->getContent(), true);
+
+        $id = $data['data']['id'];
+        $status = $data['data']['status'];
+
+        if ($status === 'open') {
+            SchoolYear::query()->where('id', '!=', $id)->update(['status' => 'close']);
+        }
+
+        return $response;
+    }
+
     public function setSchoolYearStatus(Request $request, SchoolYear $schoolYear)
     {
-        $validatedData = $request->validate($this->schoolYearStatusValidation());
+        $validated = $request->validate($this->schoolYearStatusValidation());
 
         SchoolYear::query()->update(['status' => 'close']);
 
-        $schoolYear->update($validatedData);
+        $schoolYear->update($validated);
 
         return $this->success($schoolYear, 'School year status updated');
     }

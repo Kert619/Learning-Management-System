@@ -6,4 +6,15 @@
 
 <script setup lang="ts">
 import SchoolYearIndex from 'components/SchoolYear/SchoolYearIndex.vue';
+import { Loading } from 'quasar';
+import { useSchoolYearStore } from 'src/stores/school-year';
+
+defineOptions({
+  async preFetch({ store }) {
+    Loading.show();
+    const schoolYearStore = useSchoolYearStore(store);
+    await schoolYearStore.fetchIndex();
+    Loading.hide();
+  },
+});
 </script>

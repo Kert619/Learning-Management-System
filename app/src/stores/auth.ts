@@ -29,8 +29,6 @@ export const useAuthStore = defineStore('user', () => {
         Notify.create({
           message: error.response.data?.message,
           type: 'negative',
-          progress: true,
-          position: 'top-right',
         });
 
         throw error;
@@ -47,8 +45,6 @@ export const useAuthStore = defineStore('user', () => {
         Notify.create({
           message: error.response.data?.message,
           type: 'negative',
-          progress: true,
-          position: 'top-right',
         });
 
         throw error;

@@ -34,8 +34,8 @@ abstract class Controller
 
     private function orderBy(Builder $query)
     {
-        foreach (static::$orderBy as $order) {
-            $query->orderBy($order);
+        foreach (static::$orderBy as $key => $value) {
+            $query->orderBy($key, $value);
         }
     }
 
