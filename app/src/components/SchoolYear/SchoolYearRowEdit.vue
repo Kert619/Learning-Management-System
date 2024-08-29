@@ -37,7 +37,7 @@
         size="xs"
         icon="mdi-content-save"
         color="positive"
-        :disable="disableSave"
+        :disable="!isDirty"
         @click="onSaved"
       />
       <q-btn
@@ -74,16 +74,13 @@ const isDirty = computed(() => {
   return JSON.stringify(schoolYearRef.value) !== JSON.stringify(original);
 });
 
-const disableSave = computed(() => {
-  return !schoolYearRef.value.school_year.trim() || !isDirty.value;
-});
-
 const onToggleStatus = (value: SchoolYearStatus) => {
   emit('toggleStatus', schoolYearRef.value.id as number, value);
 };
 
 const onSaved = () => {
-  if (disableSave.value) return;
+  if (!isDirty.value) return;
+
   emit('saved', schoolYearRef.value.id as number);
 };
 </script>

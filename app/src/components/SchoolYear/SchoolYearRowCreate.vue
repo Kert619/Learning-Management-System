@@ -32,7 +32,6 @@
         size="xs"
         icon="mdi-content-save"
         color="positive"
-        :disable="disableSave"
         @click="onSaved"
       />
       <q-btn
@@ -50,7 +49,7 @@
 
 <script setup lang="ts">
 import { SchoolYear, SchoolYearStatus } from 'src/stores/school-year';
-import { computed, toRef } from 'vue';
+import { toRef } from 'vue';
 
 const emit = defineEmits<{
   saved: [id: string];
@@ -64,16 +63,11 @@ const props = defineProps<{
 
 const schoolYearRef = toRef(props.schoolYear);
 
-const disableSave = computed(() => {
-  return !schoolYearRef.value.school_year.trim();
-});
-
 const onToggleStatus = (value: SchoolYearStatus) => {
   emit('toggleStatus', schoolYearRef.value.$guid as string, value);
 };
 
 const onSaved = () => {
-  if (disableSave.value) return;
   emit('saved', schoolYearRef.value.$guid as string);
 };
 </script>

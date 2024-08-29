@@ -8,6 +8,7 @@
       flat
       bordered
       :rows-per-page-options="[0]"
+      :filter="filter"
     >
       <template #top-row>
         <SchoolYearRowCreate
@@ -27,6 +28,7 @@
           @deleted="handleDeleted"
           @toggle-status="handleToggleStatusEdit"
           @saved="handleSavedEdit"
+          :key="props.row.id"
         />
       </template>
     </q-table>
@@ -41,7 +43,7 @@
   >
     <q-toolbar class="q-gutter-sm full-height" style="background: inherit">
       <q-input
-        v-model="search"
+        v-model="filter"
         dense
         outlined
         label="Search"
@@ -74,7 +76,7 @@ import SchoolYearRowEdit from 'components/SchoolYear/SchoolYearRowEdit.vue';
 
 const $q = useQuasar();
 const schoolYearStore = useSchoolYearStore();
-const search = ref('');
+const filter = ref('');
 const refresh = ref(false);
 
 const columns: QTableColumn[] = [
