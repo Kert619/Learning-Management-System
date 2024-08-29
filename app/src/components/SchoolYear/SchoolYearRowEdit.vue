@@ -9,7 +9,13 @@
       />
     </q-td>
     <q-td>
-      <q-input v-model="schoolYearRef.school_year" dense borderless />
+      <q-input
+        v-model="schoolYearRef.school_year"
+        dense
+        borderless
+        :error="schoolYearRef.errors?.school_year !== undefined"
+        :error-message="schoolYearRef.errors?.school_year?.toString()"
+      />
     </q-td>
     <q-td>
       <q-toggle

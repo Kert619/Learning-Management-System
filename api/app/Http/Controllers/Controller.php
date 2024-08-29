@@ -19,6 +19,7 @@ abstract class Controller
 
     abstract protected function storeValidations(): array;
     abstract protected function updateValidations(string $id): array;
+    abstract protected function validationMessages(): array;
 
     public function __construct()
     {
@@ -70,8 +71,8 @@ abstract class Controller
 
     public function store(Request $request)
     {
-        $validatedData = $request->validate($this->storeValidations());
-        $model = $this->model::create($validatedData);
+        $validated = $request->validate($this->storeValidations(), $this->validationMessages());
+        $model = $this->model::create($validated);
         return $this->success($model, 'Created', 201);
     }
 
@@ -84,8 +85,8 @@ abstract class Controller
     public function update(Request $request, $id)
     {
         $model = $this->model::findOrFail($id);
-        $validatedData = $request->validate($this->updateValidations($id));
-        $model->update($validatedData);
+        $validated = $request->validate($this->updateValidations($id), $this->validationMessages());
+        $model->update($validated);
         return $this->success($model, 'Updated');
     }
 

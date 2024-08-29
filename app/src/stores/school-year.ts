@@ -2,26 +2,31 @@ import { defineStore } from 'pinia';
 import { ref, Ref } from 'vue';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
+import { AxiosError } from 'axios';
 
 export type SchoolYear = {
   id?: number;
   school_year: string;
   status: SchoolYearStatus;
   $guid?: string;
+  errors?: SchoolYearError;
 };
 
 export type SchoolYearStatus = 'open' | 'close';
 
 type SchoolYearError = {
-  id: number;
-  school_year: string;
-  status: string;
+  school_year?: string;
+  status?: string;
+};
+
+type ValidationErrorResponse = {
+  errors: SchoolYear;
+  message: string;
 };
 
 export const useSchoolYearStore = defineStore('school-year', () => {
   const index: Ref<SchoolYear[]> = ref([]);
   const created: Ref<Map<string, SchoolYear>> = ref(new Map());
-  const createdErrors: Ref<Map<string, SchoolYearError>> = ref(new Map());
 
   const fetchIndex = async (force = false) => {
     if (index.value.length === 0 || force) {
@@ -67,13 +72,20 @@ export const useSchoolYearStore = defineStore('school-year', () => {
           type: 'positive',
         });
 
+        // Remove any existing errors for this school year
+        delete schoolYear.errors;
+
         return response;
       })
-      .catch((error) => {
-        Notify.create({
-          message: error.response.data.message,
-          type: 'negative',
-        });
+      .catch((error: AxiosError<ValidationErrorResponse>) => {
+        if (error.response?.status === 422) {
+          schoolYear.errors = error.response?.data?.errors;
+        } else {
+          Notify.create({
+            message: 'An unexpected error occured',
+            type: 'negative',
+          });
+        }
 
         throw error;
       });
@@ -91,13 +103,19 @@ export const useSchoolYearStore = defineStore('school-year', () => {
           type: 'positive',
         });
 
+        delete schoolYear.errors;
+
         return response;
       })
-      .catch((error) => {
-        Notify.create({
-          message: error.response.data.message,
-          type: 'negative',
-        });
+      .catch((error: AxiosError<ValidationErrorResponse>) => {
+        if (error.response?.status === 422) {
+          schoolYear.errors = error.response?.data.errors;
+        } else {
+          Notify.create({
+            message: 'An unexpected error occured',
+            type: 'negative',
+          });
+        }
 
         throw error;
       });
@@ -127,7 +145,6 @@ export const useSchoolYearStore = defineStore('school-year', () => {
   return {
     index,
     created,
-    createdErrors,
     fetchIndex,
     create,
     store,

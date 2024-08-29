@@ -108,7 +108,6 @@ const columns: QTableColumn[] = [
 
 onMounted(() => {
   schoolYearStore.created = new Map();
-  schoolYearStore.createdErrors = new Map();
 });
 
 const indexRows = computed(() => {
