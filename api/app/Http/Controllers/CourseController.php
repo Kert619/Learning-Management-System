@@ -26,4 +26,9 @@ class CourseController extends Controller
             'course_code' => ['required', 'string', 'max:255', Rule::unique('courses', 'course_code')->ignore($id)]
         ];
     }
+
+    protected function validationMessages(): array
+    {
+        return [];
+    }
 }

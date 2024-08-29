@@ -20,7 +20,7 @@ type SchoolYearError = {
 };
 
 type ValidationErrorResponse = {
-  errors: SchoolYear;
+  errors: SchoolYearError;
   message: string;
 };
 

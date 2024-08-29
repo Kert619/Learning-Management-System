@@ -31,13 +31,6 @@ class SchoolYearController extends Controller
         ];
     }
 
-    protected function setSchoolYearStatusValidation(): array
-    {
-        return [
-            'status' => ['required', 'string', Rule::in(['open', 'close'])]
-        ];
-    }
-
     protected function validationMessages(): array
     {
         return [];
@@ -73,16 +66,5 @@ class SchoolYearController extends Controller
         }
 
         return $response;
-    }
-
-    public function setSchoolYearStatus(Request $request, SchoolYear $schoolYear)
-    {
-        $validated = $request->validate($this->setSchoolYearStatusValidation());
-
-        SchoolYear::query()->update(['status' => 'close']);
-
-        $schoolYear->update($validated);
-
-        return $this->success($schoolYear, 'School year status updated');
     }
 }

@@ -105,23 +105,6 @@ class SchoolYearControllerTest extends TestCase
         SchoolYear::query()->findOrFail($schoolYear->id);
     }
 
-    public function test_set_school_year_status()
-    {
-        //load data
-        $schoolYear = SchoolYear::factory()->create();
-
-        $data = ['status' => 'open'];
-
-        //call endpoint
-        $response = $this->putJson('/api/school-years/set-school-year-status/' . $schoolYear->id, $data);
-
-        //assert status
-        $response->assertOk();
-
-        //verify records
-        $response->assertJsonFragment($data);
-    }
-
     public function test_store_has_invalid_data()
     {
         //load data
