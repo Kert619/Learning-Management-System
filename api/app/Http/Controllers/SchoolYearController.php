@@ -25,36 +25,4 @@ class SchoolYearController extends Controller
     {
         return app()->make(UpdateSchoolYearRequest::class);
     }
-
-    public function store()
-    {
-        $response = parent::store();
-
-        $data = json_decode($response->getContent(), true);
-
-        $id = $data['data']['id'];
-        $status = $data['data']['status'];
-
-        if ($status === 'open') {
-            SchoolYear::query()->where('id', '!=', $id)->update(['status' => 'close']);
-        }
-
-        return $response;
-    }
-
-    public function update($id)
-    {
-        $response = parent::update($id);
-
-        $data = json_decode($response->getContent(), true);
-
-        $id = $data['data']['id'];
-        $status = $data['data']['status'];
-
-        if ($status === 'open') {
-            SchoolYear::query()->where('id', '!=', $id)->update(['status' => 'close']);
-        }
-
-        return $response;
-    }
 }

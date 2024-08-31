@@ -24,7 +24,7 @@ class StoreSchoolYearRequest extends FormRequest
     {
         return [
             'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')],
-            'status' => ['nullable', 'string', Rule::in(['open', 'close'])]
+            'status' => ['required', 'string', Rule::in(['open', 'close'])]
         ];
     }
 }

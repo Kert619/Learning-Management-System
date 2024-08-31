@@ -15,4 +15,19 @@ class SchoolYear extends Model
     {
         return SchoolYearFactory::new();
     }
+
+    protected static function booted(): void
+    {
+        static::created(function (SchoolYear $model) {
+            if ($model->status === 'open') {
+                SchoolYear::query()->where('id', '!=', $model->id)->update(['status' => 'close']);
+            }
+        });
+
+        static::updated(function (SchoolYear $model) {
+            if ($model->status === 'open') {
+                SchoolYear::query()->where('id', '!=', $model->id)->update(['status' => 'close']);
+            }
+        });
+    }
 }
