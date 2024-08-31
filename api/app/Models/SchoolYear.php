@@ -18,16 +18,15 @@ class SchoolYear extends Model
 
     protected static function booted(): void
     {
-        static::created(function (SchoolYear $model) {
-            if ($model->status === 'open') {
-                SchoolYear::query()->where('id', '!=', $model->id)->update(['status' => 'close']);
-            }
-        });
+        static::created(fn(SchoolYear $model) => self::closeSchoolYears($model));
 
-        static::updated(function (SchoolYear $model) {
-            if ($model->status === 'open') {
-                SchoolYear::query()->where('id', '!=', $model->id)->update(['status' => 'close']);
-            }
-        });
+        static::updated(fn(SchoolYear $model) => self::closeSchoolYears($model));
+    }
+
+    private static function closeSchoolYears(SchoolYear $model)
+    {
+        if ($model->status === 'open') {
+            SchoolYear::query()->where('id', '!=', $model->id)->update(['status' => 'close']);
+        }
     }
 }
