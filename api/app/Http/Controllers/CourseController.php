@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class CourseController extends Controller
 {
-    protected static string $modelName = Course::class;
+    protected static string $modelClass = Course::class;
     protected static array $indexColumns = ['course_title', 'course_code'];
     protected static array $orderBy = ['course_title'];
 
@@ -27,7 +27,7 @@ class CourseController extends Controller
         ];
     }
 
-    protected function validationMessages(): array
+    protected function validationAttributes(): array
     {
         return [];
     }

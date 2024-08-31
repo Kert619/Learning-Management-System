@@ -17,8 +17,12 @@ class SchoolYearFactory extends Factory
     public function definition(): array
     {
         return [
-            'school_year' => fake()->year() . '-' . fake()->year(),
-            'status' => 'close'
+            'school_year' => fake()->year() . '-' . fake()->year()
         ];
+    }
+
+    public function close(): Factory
+    {
+        return $this->state(fn() => ['status' => 'close']);
     }
 }

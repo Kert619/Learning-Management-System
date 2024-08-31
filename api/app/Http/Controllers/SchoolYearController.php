@@ -11,7 +11,7 @@ class SchoolYearController extends Controller
 {
     use HttpResponse;
 
-    protected static string $modelName = SchoolYear::class;
+    protected static string $modelClass = SchoolYear::class;
     protected static array $indexColumns = ['id', 'school_year', 'status'];
     protected static array $orderBy = ['id' => 'desc'];
 
@@ -31,7 +31,7 @@ class SchoolYearController extends Controller
         ];
     }
 
-    protected function validationMessages(): array
+    protected function validationAttributes(): array
     {
         return [];
     }

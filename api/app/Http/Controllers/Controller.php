@@ -12,18 +12,18 @@ abstract class Controller
     use HttpResponse;
 
     private Model $model;
-    protected static string $modelName;
+    protected static string $modelClass;
     protected static array $indexColumns = [];
     protected static array $with = [];
     protected static array $orderBy = [];
 
     abstract protected function storeValidations(): array;
     abstract protected function updateValidations(string $id): array;
-    abstract protected function validationMessages(): array;
+    abstract protected function validationAttributes(): array;
 
     public function __construct()
     {
-        $this->model = new (static::$modelName);
+        $this->model = new (static::$modelClass);
     }
 
     private function filter(Builder $query, array $filters)
@@ -71,7 +71,7 @@ abstract class Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate($this->storeValidations(), $this->validationMessages());
+        $validated = $request->validate($this->storeValidations(), [], $this->validationAttributes());
         $model = $this->model::create($validated);
         return $this->success($model, 'Created', 201);
     }
@@ -85,7 +85,7 @@ abstract class Controller
     public function update(Request $request, $id)
     {
         $model = $this->model::findOrFail($id);
-        $validated = $request->validate($this->updateValidations($id), $this->validationMessages());
+        $validated = $request->validate($this->updateValidations($id), [], $this->validationAttributes());
         $model->update($validated);
         return $this->success($model, 'Updated');
     }

@@ -4,9 +4,9 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\SchoolYear;
 use App\Models\User;
+use Database\Factories\SchoolYearFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class SchoolYearControllerTest extends TestCase
@@ -24,7 +24,7 @@ class SchoolYearControllerTest extends TestCase
     public function test_index(): void
     {
         //load data
-        $schoolYears =  SchoolYear::factory(5)->create()->map(fn($schoolYear) => $schoolYear->only(['id', 'school_year', 'status']));
+        $schoolYears =  SchoolYear::factory()->count(5)->close()->create()->map(fn($schoolYear) => $schoolYear->only(['id', 'school_year', 'status']));
 
         //call endpoint
         $response = $this->getJson('/api/school-years');
@@ -39,7 +39,7 @@ class SchoolYearControllerTest extends TestCase
     public function test_show()
     {
         //load data
-        $schoolYear =  SchoolYear::factory()->create()->only(['id', 'school_year', 'status']);
+        $schoolYear =  SchoolYear::factory()->close()->create()->only(['id', 'school_year', 'status']);
 
         //call endpoint
         $response = $this->getJson('/api/school-years/' . $schoolYear['id']);
@@ -48,25 +48,22 @@ class SchoolYearControllerTest extends TestCase
         $response->assertOk();
 
         //verify records
-        $response->assertJson($schoolYear);
+        $response->assertJsonFragment($schoolYear);
     }
 
     public function test_store()
     {
         //load data
-        $data = [
-            'school_year' => '2025-2026 1ST SEMESTER',
-            'status' => 'open'
-        ];
+        $schoolYear = SchoolYear::factory()->close()->make()->toArray();
 
         //call endpoint
-        $response = $this->postJson('/api/school-years', $data);
+        $response = $this->postJson('/api/school-years', $schoolYear);
 
         //assert status
         $response->assertCreated();
 
         //verify records
-        $response->assertJsonFragment($data);
+        $response->assertJsonFragment($schoolYear);
     }
 
     public function test_update()
@@ -74,19 +71,16 @@ class SchoolYearControllerTest extends TestCase
         //load data
         $schoolYear = SchoolYear::factory()->create();
 
-        $data = [
-            'school_year' => '2025-2026 1ST SEMESTER',
-            'status' => 'open'
-        ];
+        $schoolYearUpdated = SchoolYear::factory()->close()->make()->toArray();
 
         //call endpoint
-        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $data);
+        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $schoolYearUpdated);
 
         //assert status
         $response->assertOk();
 
         //verify records
-        $response->assertJsonFragment($data);
+        $response->assertJsonFragment($schoolYearUpdated);
     }
 
     public function test_delete()
