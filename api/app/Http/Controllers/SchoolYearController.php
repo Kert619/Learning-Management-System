@@ -13,7 +13,7 @@ class SchoolYearController extends Controller
     use HttpResponse;
 
     protected static string $modelClass = SchoolYear::class;
-    protected static array $indexColumns = ['id', 'school_year', 'status'];
+    protected static array $indexColumns = ['id', 'school_year', 'status', 'created_at', 'updated_at'];
     protected static array $orderBy = ['id' => 'desc'];
 
     protected function storeRequest(): FormRequest

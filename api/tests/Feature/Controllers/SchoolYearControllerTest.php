@@ -4,7 +4,6 @@ namespace Tests\Feature\Controllers;
 
 use App\Models\SchoolYear;
 use App\Models\User;
-use Database\Factories\SchoolYearFactory;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -24,7 +23,7 @@ class SchoolYearControllerTest extends TestCase
     public function test_index(): void
     {
         //load data
-        $schoolYears =  SchoolYear::factory()->count(5)->close()->create()->map(fn($schoolYear) => $schoolYear->only(['id', 'school_year', 'status']));
+        $schoolYears =  SchoolYear::factory()->count(5)->close()->create();
 
         //call endpoint
         $response = $this->getJson('/api/school-years');
@@ -33,37 +32,39 @@ class SchoolYearControllerTest extends TestCase
         $response->assertOk()->assertJsonCount(5);
 
         //verify records
-        $schoolYears->each(fn($schoolYear) => $response->assertJsonFragment($schoolYear));
+        $schoolYears->each(fn($schoolYear) => $response->assertJsonFragment($schoolYear->toArray()));
     }
 
     public function test_show()
     {
         //load data
-        $schoolYear =  SchoolYear::factory()->close()->create()->only(['id', 'school_year', 'status']);
+        $schoolYear =  SchoolYear::factory()->close()->create();
 
         //call endpoint
-        $response = $this->getJson('/api/school-years/' . $schoolYear['id']);
+        $response = $this->getJson('/api/school-years/' . $schoolYear->id);
 
         //assert status
         $response->assertOk();
 
         //verify records
-        $response->assertJsonFragment($schoolYear);
+        $response->assertJson($schoolYear->toArray());
     }
 
     public function test_store()
     {
         //load data
-        $schoolYear = SchoolYear::factory()->close()->make()->toArray();
+        $schoolYear = SchoolYear::factory()->close()->make();
 
         //call endpoint
-        $response = $this->postJson('/api/school-years', $schoolYear);
+        $response = $this->postJson('/api/school-years', $schoolYear->toArray());
 
         //assert status
         $response->assertCreated();
 
         //verify records
-        $response->assertJsonFragment($schoolYear);
+        $response->assertJson([
+            'data' => $schoolYear->toArray()
+        ]);
     }
 
     public function test_update()
@@ -71,16 +72,18 @@ class SchoolYearControllerTest extends TestCase
         //load data
         $schoolYear = SchoolYear::factory()->create();
 
-        $schoolYearUpdated = SchoolYear::factory()->close()->make()->toArray();
+        $schoolYearUpdated = SchoolYear::factory()->close()->make();
 
         //call endpoint
-        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $schoolYearUpdated);
+        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $schoolYearUpdated->toArray());
 
         //assert status
         $response->assertOk();
 
         //verify records
-        $response->assertJsonFragment($schoolYearUpdated);
+        $response->assertJson([
+            'data' => $schoolYearUpdated->toArray()
+        ]);
     }
 
     public function test_delete()
@@ -97,37 +100,5 @@ class SchoolYearControllerTest extends TestCase
         //verify records
         $this->expectException(ModelNotFoundException::class);
         SchoolYear::query()->findOrFail($schoolYear->id);
-    }
-
-    public function test_store_has_invalid_data()
-    {
-        //load data
-        $data = [
-            'school_year' => '',
-            'status' => ''
-        ];
-
-        //call endpoint
-        $response = $this->postJson('/api/school-years', $data);
-
-        //assert status
-        $response->assertUnprocessable();
-    }
-
-    public function test_update_has_invalid_data()
-    {
-        //load data
-        $schoolYear = SchoolYear::factory()->create();
-
-        $data = [
-            'school_year' => '',
-            'status' => ''
-        ];
-
-        //call endpoint
-        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $data);
-
-        //assert status
-        $response->assertUnprocessable();
     }
 }

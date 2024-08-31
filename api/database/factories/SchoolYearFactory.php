@@ -21,7 +21,7 @@ class SchoolYearFactory extends Factory
         ];
     }
 
-    public function close(): Factory
+    public function close(): self
     {
         return $this->state(fn() => ['status' => 'close']);
     }
