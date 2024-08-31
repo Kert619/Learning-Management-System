@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SchoolYear\StoreSchoolYearRequest;
+use App\Http\Requests\SchoolYear\UpdateSchoolYearRequest;
 use App\Models\SchoolYear;
 use App\Traits\HttpResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
+use Illuminate\Foundation\Http\FormRequest;
 
 class SchoolYearController extends Controller
 {
@@ -15,30 +16,19 @@ class SchoolYearController extends Controller
     protected static array $indexColumns = ['id', 'school_year', 'status'];
     protected static array $orderBy = ['id' => 'desc'];
 
-    protected function storeValidations(): array
+    protected function storeRequest(): FormRequest
     {
-        return [
-            'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')],
-            'status' => ['nullable', 'string', Rule::in(['open', 'close'])]
-        ];
+        return app()->make(StoreSchoolYearRequest::class);
     }
 
-    protected function updateValidations(string $id): array
+    protected function updateRequest(): FormRequest
     {
-        return [
-            'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')->ignore($id)],
-            'status' => ['required', 'string', Rule::in(['open', 'close'])]
-        ];
+        return app()->make(UpdateSchoolYearRequest::class);
     }
 
-    protected function validationAttributes(): array
+    public function store()
     {
-        return [];
-    }
-
-    public function store(Request $request)
-    {
-        $response = parent::store($request);
+        $response = parent::store();
 
         $data = json_decode($response->getContent(), true);
 
@@ -52,9 +42,9 @@ class SchoolYearController extends Controller
         return $response;
     }
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
-        $response = parent::update($request, $id);
+        $response = parent::update($id);
 
         $data = json_decode($response->getContent(), true);
 

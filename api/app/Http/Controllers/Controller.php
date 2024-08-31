@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Traits\HttpResponse;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Request;
 
 abstract class Controller
@@ -17,9 +18,8 @@ abstract class Controller
     protected static array $with = [];
     protected static array $orderBy = [];
 
-    abstract protected function storeValidations(): array;
-    abstract protected function updateValidations(string $id): array;
-    abstract protected function validationAttributes(): array;
+    abstract protected function storeRequest(): FormRequest;
+    abstract protected function updateRequest(): FormRequest;
 
     public function __construct()
     {
@@ -69,9 +69,9 @@ abstract class Controller
         return $data;
     }
 
-    public function store(Request $request)
+    public function store()
     {
-        $validated = $request->validate($this->storeValidations(), [], $this->validationAttributes());
+        $validated = $this->storeRequest()->validated();
         $model = $this->model::create($validated);
         return $this->success($model, 'Created', 201);
     }
@@ -82,10 +82,10 @@ abstract class Controller
         return $model;
     }
 
-    public function update(Request $request, $id)
+    public function update($id)
     {
         $model = $this->model::findOrFail($id);
-        $validated = $request->validate($this->updateValidations($id), [], $this->validationAttributes());
+        $validated = $this->updateRequest()->validated();
         $model->update($validated);
         return $this->success($model, 'Updated');
     }
