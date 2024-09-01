@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SchoolYear;
 
+use App\Enums\SchoolYearStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -25,7 +26,7 @@ class UpdateSchoolYearRequest extends FormRequest
         $id = $this->route('school_year');
         return [
             'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')->ignore($id)],
-            'status' => ['required', 'string', Rule::in(['open', 'close'])]
+            'status' => ['required', 'string', Rule::enum(SchoolYearStatus::class)]
         ];
     }
 }

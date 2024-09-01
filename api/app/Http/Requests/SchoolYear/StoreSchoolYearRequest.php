@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\SchoolYear;
 
+use App\Enums\SchoolYearStatus;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
@@ -24,7 +25,7 @@ class StoreSchoolYearRequest extends FormRequest
     {
         return [
             'school_year' => ['required', 'string', 'max:255', Rule::unique('school_years', 'school_year')],
-            'status' => ['required', 'string', Rule::in(['open', 'close'])]
+            'status' => ['required', 'string', Rule::enum(SchoolYearStatus::class)]
         ];
     }
 }
