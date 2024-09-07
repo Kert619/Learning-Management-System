@@ -59,7 +59,7 @@
         color="primary"
         icon="mdi-plus"
         no-wrap
-        @click="schoolYearStore.create"
+        @click="handleCreate"
       />
     </q-toolbar>
 
@@ -68,11 +68,11 @@
 </template>
 
 <script setup lang="ts">
+import SchoolYearRowCreate from 'components/Admin/SchoolYear/SchoolYearRowCreate.vue';
+import SchoolYearRowEdit from 'components/Admin/SchoolYear/SchoolYearRowEdit.vue';
 import { QTableColumn, useQuasar } from 'quasar';
 import { SchoolYearStatus, useSchoolYearStore } from 'src/stores/school-year';
 import { computed, nextTick, onMounted, ref } from 'vue';
-import SchoolYearRowCreate from 'components/SchoolYear/SchoolYearRowCreate.vue';
-import SchoolYearRowEdit from 'components/SchoolYear/SchoolYearRowEdit.vue';
 
 const $q = useQuasar();
 const schoolYearStore = useSchoolYearStore();
@@ -128,6 +128,10 @@ const refreshRow = async () => {
   refresh.value = true;
   await nextTick();
   refresh.value = false;
+};
+
+const handleCreate = () => {
+  schoolYearStore.create();
 };
 
 /**

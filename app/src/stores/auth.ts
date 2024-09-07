@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import { Ref, ref } from 'vue';
 import { api, web } from 'boot/axios';
 import { Notify } from 'quasar';
+import { Role } from 'src/enums/role';
 
 export type LoginCredential = {
   email: string;
@@ -11,7 +12,7 @@ export type LoginCredential = {
 export type User = {
   id: number;
   email: string;
-  role: 'admin' | 'instructor' | 'student';
+  role: Role;
 };
 
 export const useAuthStore = defineStore('user', () => {

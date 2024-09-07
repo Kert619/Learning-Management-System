@@ -5,7 +5,7 @@
 </template>
 
 <script setup lang="ts">
-import SchoolYearIndex from 'components/SchoolYear/SchoolYearIndex.vue';
+import SchoolYearIndex from 'components/Admin/SchoolYear/SchoolYearIndex.vue';
 import { Loading } from 'quasar';
 import { useSchoolYearStore } from 'src/stores/school-year';
 

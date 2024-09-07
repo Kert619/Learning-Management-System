@@ -19,15 +19,19 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/admin',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/AdminLayout.vue'),
     children: [
       {
         path: '',
         component: () => import('pages/IndexPage.vue'),
       },
       {
-        path: 'school-year',
+        path: 'school-years',
         component: () => import('pages/Admin/SchoolYearPage.vue'),
+      },
+      {
+        path: 'courses',
+        component: () => import('pages/Admin/CoursePage.vue'),
       },
     ],
     beforeEnter: [auth, role],
@@ -37,7 +41,7 @@ const routes: RouteRecordRaw[] = [
   },
   {
     path: '/user',
-    component: () => import('layouts/MainLayout.vue'),
+    component: () => import('layouts/AdminLayout.vue'),
     children: [{ path: '', component: () => import('pages/IndexPage.vue') }],
     beforeEnter: [auth, role],
     meta: {

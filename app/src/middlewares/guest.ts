@@ -1,3 +1,4 @@
+import { Role } from 'src/enums/role';
 import { useAuthStore } from 'src/stores/auth';
 import { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 
@@ -9,7 +10,7 @@ export const guest = async (
   const authStore = useAuthStore();
   if (!authStore.user) return next();
 
-  if (authStore.user.role == 'admin') {
+  if (authStore.user.role === Role.ADMIN) {
     next({ path: '/admin' });
   }
 };

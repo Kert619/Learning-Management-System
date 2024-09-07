@@ -1,12 +1,7 @@
 <template>
   <q-tr>
     <q-td auto-width>
-      <q-chip
-        icon="mdi-identifier"
-        size="xs"
-        color="primary"
-        :label="schoolYearRef.id"
-      />
+      <q-chip icon="mdi-identifier" size="xs" color="primary" label="New" />
     </q-td>
     <q-td>
       <q-input
@@ -37,7 +32,6 @@
         size="xs"
         icon="mdi-content-save"
         color="positive"
-        :disable="!isDirty"
         @click="onSaved"
       />
       <q-btn
@@ -47,7 +41,7 @@
         size="xs"
         icon="mdi-delete"
         color="negative"
-        @click="emit('deleted', schoolYearRef.id as number)"
+        @click="emit('deleted', schoolYearRef.$guid as string)"
       />
     </q-td>
   </q-tr>
@@ -55,12 +49,12 @@
 
 <script setup lang="ts">
 import { SchoolYear, SchoolYearStatus } from 'src/stores/school-year';
-import { computed, toRef } from 'vue';
+import { toRef, watch } from 'vue';
 
 const emit = defineEmits<{
-  saved: [id: number];
-  deleted: [id: number];
-  toggleStatus: [id: number, value: SchoolYearStatus];
+  saved: [id: string];
+  deleted: [id: string];
+  toggleStatus: [id: string, value: SchoolYearStatus];
 }>();
 
 const props = defineProps<{
@@ -68,19 +62,19 @@ const props = defineProps<{
 }>();
 
 const schoolYearRef = toRef(props.schoolYear);
-const original: SchoolYear = JSON.parse(JSON.stringify(props.schoolYear));
-
-const isDirty = computed(() => {
-  return JSON.stringify(schoolYearRef.value) !== JSON.stringify(original);
-});
 
 const onToggleStatus = (value: SchoolYearStatus) => {
-  emit('toggleStatus', schoolYearRef.value.id as number, value);
+  emit('toggleStatus', schoolYearRef.value.$guid as string, value);
 };
 
 const onSaved = () => {
-  if (!isDirty.value) return;
-
-  emit('saved', schoolYearRef.value.id as number);
+  emit('saved', schoolYearRef.value.$guid as string);
 };
+
+watch(
+  () => schoolYearRef.value.school_year,
+  (newVal) => {
+    schoolYearRef.value.school_year = newVal.toUpperCase();
+  }
+);
 </script>

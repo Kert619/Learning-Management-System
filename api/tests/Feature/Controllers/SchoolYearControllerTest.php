@@ -16,7 +16,7 @@ class SchoolYearControllerTest extends TestCase
     {
         parent::setUp();
         /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
-        $user = User::factory()->create();
+        $user = User::factory()->createOneQ();
         $this->actingAs($user);
     }
 

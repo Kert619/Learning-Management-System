@@ -1,38 +1,36 @@
 import { defineStore } from 'pinia';
-import { ref, Ref } from 'vue';
+import { Ref, ref } from 'vue';
 import { api } from 'boot/axios';
 import { Notify } from 'quasar';
 import { AxiosError } from 'axios';
 import errorMessages from 'src/error-messages';
 
-export type SchoolYear = {
+export type CourseObject = {
   id?: number;
-  school_year: string;
-  status: SchoolYearStatus;
+  course_code: string;
+  course_title: string;
   $guid?: string;
-  errors?: SchoolYearError;
+  errors?: CourseError;
 };
 
-export type SchoolYearStatus = 'open' | 'close';
-
-type SchoolYearError = {
-  school_year?: string;
-  status?: string;
+type CourseError = {
+  course_code?: string;
+  course_title?: string;
 };
 
 type ValidationErrorResponse = {
-  errors: SchoolYearError;
+  errors: CourseError;
   message: string;
 };
 
-export const useSchoolYearStore = defineStore('school-year', () => {
-  const index: Ref<SchoolYear[]> = ref([]);
-  const created: Ref<Map<string, SchoolYear>> = ref(new Map());
+export const useCourseStore = defineStore('course', () => {
+  const index: Ref<CourseObject[]> = ref([]);
+  const created: Ref<Map<string, CourseObject>> = ref(new Map());
 
   const fetchIndex = async (force = false) => {
     if (index.value.length === 0 || force) {
       return api
-        .get('school-years')
+        .get('courses')
         .then((response) => {
           index.value = response.data;
           return response;
@@ -48,12 +46,12 @@ export const useSchoolYearStore = defineStore('school-year', () => {
     }
   };
 
-  const create = (prefill: Partial<SchoolYear> = {}) => {
+  const create = (prefill: Partial<CourseObject> = {}) => {
     const guid = crypto.randomUUID();
 
     created.value.set(guid, {
-      school_year: '',
-      status: 'close',
+      course_code: '',
+      course_title: '',
       ...prefill,
       $guid: guid,
     });
@@ -62,24 +60,24 @@ export const useSchoolYearStore = defineStore('school-year', () => {
   };
 
   const store = async (id: string) => {
-    const schoolYear = created.value.get(id);
-    if (!schoolYear) return;
+    const course = created.value.get(id);
+    if (!course) return;
 
     return api
-      .post('school-years', schoolYear)
+      .post('courses', course)
       .then((response) => {
         Notify.create({
-          message: 'New school year has been added',
+          message: 'New course has been added',
           type: 'positive',
         });
 
-        delete schoolYear.errors;
+        delete course.errors;
 
         return response;
       })
       .catch((error: AxiosError<ValidationErrorResponse>) => {
         if (error.response?.status === 422) {
-          schoolYear.errors = error.response?.data?.errors;
+          course.errors = error.response?.data?.errors;
         } else {
           Notify.create({
             message: errorMessages[500],
@@ -92,24 +90,24 @@ export const useSchoolYearStore = defineStore('school-year', () => {
   };
 
   const update = async (id: number) => {
-    const schoolYear = index.value.find((schoolYear) => schoolYear.id == id);
-    if (!schoolYear) return;
+    const course = index.value.find((course) => course.id == id);
+    if (!course) return;
 
     return api
-      .put(`school-years/${id}`, schoolYear)
+      .put(`courses/${id}`, course)
       .then((response) => {
         Notify.create({
-          message: 'School year has been updated',
+          message: 'Course has been updated',
           type: 'positive',
         });
 
-        delete schoolYear.errors;
+        delete course.errors;
 
         return response;
       })
       .catch((error: AxiosError<ValidationErrorResponse>) => {
         if (error.response?.status === 422) {
-          schoolYear.errors = error.response?.data.errors;
+          course.errors = error.response?.data.errors;
         } else {
           Notify.create({
             message: errorMessages[500],
@@ -123,10 +121,10 @@ export const useSchoolYearStore = defineStore('school-year', () => {
 
   const destroy = async (id: number) => {
     return api
-      .delete(`school-years/${id}`)
+      .delete(`courses/${id}`)
       .then((response) => {
         Notify.create({
-          message: 'School year has been removed',
+          message: 'Course has been removed',
           type: 'positive',
         });
 
@@ -142,13 +140,5 @@ export const useSchoolYearStore = defineStore('school-year', () => {
       });
   };
 
-  return {
-    index,
-    created,
-    fetchIndex,
-    create,
-    store,
-    update,
-    destroy,
-  };
+  return { index, created, fetchIndex, create, store, update, destroy };
 });
