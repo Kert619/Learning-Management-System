@@ -16,7 +16,7 @@ class CourseControllerTest extends TestCase
     {
         parent::setUp();
         /** @var \Illuminate\Contracts\Auth\Authenticatable $user */
-        $user = User::factory()->createOne();
+        $user = User::factory()->create();
         $this->actingAs($user);
     }
 

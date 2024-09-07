@@ -2,13 +2,13 @@
 
 namespace Tests\Feature\Controllers;
 
-use App\Models\SchoolYear;
+use App\Models\Program;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class SchoolYearControllerTest extends TestCase
+class ProgramControllerTest extends TestCase
 {
     use RefreshDatabase;
 
@@ -20,85 +20,85 @@ class SchoolYearControllerTest extends TestCase
         $this->actingAs($user);
     }
 
-    public function test_index(): void
+    public function test_index()
     {
         //load data
-        $schoolYears =  SchoolYear::factory()->count(5)->close()->create();
+        $programs = Program::factory()->count(5)->create();
 
         //call endpoint
-        $response = $this->getJson('/api/school-years');
+        $response = $this->getJson('/api/programs');
 
         //assert status
         $response->assertOk()->assertJsonCount(5);
 
         //verify records
-        $schoolYears->each(fn($schoolYear) => $response->assertJsonFragment($schoolYear->toArray()));
+        $programs->each(fn($program) => $response->assertJsonFragment($program->toArray()));
     }
 
     public function test_show()
     {
         //load data
-        $schoolYear =  SchoolYear::factory()->close()->create();
+        $program = Program::factory()->create();
 
         //call endpoint
-        $response = $this->getJson('/api/school-years/' . $schoolYear->id);
+        $response = $this->getJson('/api/programs/' . $program->id);
 
         //assert status
         $response->assertOk();
 
         //verify records
-        $response->assertJson($schoolYear->toArray());
+        $response->assertJson($program->toArray());
     }
 
     public function test_store()
     {
         //load data
-        $schoolYear = SchoolYear::factory()->close()->make();
+        $program = Program::factory()->make();
 
         //call endpoint
-        $response = $this->postJson('/api/school-years', $schoolYear->toArray());
+        $response = $this->postJson('/api/programs', $program->toArray());
 
         //assert status
         $response->assertCreated();
 
         //verify records
         $response->assertJson([
-            'data' => $schoolYear->toArray()
+            'data' => $program->toArray()
         ]);
     }
 
     public function test_update()
     {
         //load data
-        $schoolYear = SchoolYear::factory()->create();
+        $program = Program::factory()->create();
 
-        $schoolYearUpdated = SchoolYear::factory()->close()->make();
+        $programUpdated = Program::factory()->make();
 
         //call endpoint
-        $response = $this->putJson('/api/school-years/' . $schoolYear->id, $schoolYearUpdated->toArray());
+        $response = $this->putJson('/api/programs/' . $program->id, $programUpdated->toArray());
 
         //assert status
         $response->assertOk();
 
         //verify records
         $response->assertJson([
-            'data' => $schoolYearUpdated->toArray()
+            'data' => $programUpdated->toArray()
         ]);
     }
 
     public function test_delete()
     {
         //load data
-        $schoolYear = SchoolYear::factory()->create();
+        $program = Program::factory()->create();
 
         //call endpoint
-        $response = $this->deleteJson('/api/school-years/' . $schoolYear->id);
+        $response = $this->deleteJson('/api/programs/' . $program->id);
 
         //assert status
         $response->assertNoContent();
 
         //verify records
         $this->expectException(ModelNotFoundException::class);
-        SchoolYear::query()->findOrFail($schoolYear->id);
+        Program::query()->findOrFail($program->id);
     }
 }

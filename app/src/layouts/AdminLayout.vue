@@ -110,6 +110,7 @@ const toggleLeftDrawer = () => {
 
 const menus: { icon: string; text: string; link: string }[] = [
   { icon: 'calendar_month', text: 'School Year', link: '/admin/school-years' },
+  { icon: 'mdi-school', text: 'Programs', link: '' },
   { icon: 'library_books', text: 'Courses', link: '/admin/courses' },
   { icon: 'group', text: 'Instructors', link: '' },
   { icon: 'cable', text: 'Course Assignment', link: '' },
