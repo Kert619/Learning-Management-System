@@ -54,7 +54,7 @@ export const useAuthStore = defineStore('user', () => {
 
   const getUser = async () => {
     return api
-      .get('users/user')
+      .get('user')
       .then((response) => {
         user.value = response.data;
         return response;
