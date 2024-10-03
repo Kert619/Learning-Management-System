@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Enums\Role;
-use App\Http\Requests\User\StoreUserRequest;
+use App\Http\Requests\User\RegisterUserRequest;
 use App\Models\User;
 use App\Traits\HttpResponse;
 use Illuminate\Routing\Controller;
@@ -12,7 +12,7 @@ class RegisterUserController extends Controller
 {
     use HttpResponse;
 
-    public function registerInstructor(StoreUserRequest $request)
+    public function registerInstructor(RegisterUserRequest $request)
     {
         $validated = $request->validated();
 
@@ -24,7 +24,7 @@ class RegisterUserController extends Controller
         return $this->success($user, 'Created');
     }
 
-    public function registerStudent(StoreUserRequest $request)
+    public function registerStudent(RegisterUserRequest $request)
     {
         $validated = $request->validated();
 

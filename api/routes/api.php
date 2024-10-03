@@ -10,10 +10,7 @@ use Illuminate\Support\Facades\Route;
 /**
  * Public routes
  */
-Route::controller(RegisterUserController::class)->group(function () {
-    Route::post('register-instructor', 'registerInstructor');
-    Route::post('register-student', 'registerStudent');
-});
+Route::post('register-student', [RegisterUserController::class, 'registerStudent']);
 
 /**
  * Protected routes
@@ -24,6 +21,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
         Route::get('instructors', 'getInstructors');
         Route::get('students', 'getStudents');
     });
+
+    Route::post('register-instructor', [RegisterUserController::class, 'registerInstructor']);
 
     Route::apiResource('school-years', SchoolYearController::class);
     Route::apiResource('courses', CourseController::class);
