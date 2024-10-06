@@ -1,7 +1,7 @@
 <template>
   <q-tr>
     <q-td auto-width>
-      <q-chip icon="mdi-identifier" size="xs" color="primary" label="New" />
+      <q-chip icon="mdi-identifier" size="xs" label="New" />
     </q-td>
     <q-td>
       <q-input
@@ -13,14 +13,14 @@
       />
     </q-td>
     <q-td>
-      <q-toggle
+      <q-btn-toggle
         :model-value="schoolYearRef.status"
-        true-value="open"
-        false-value="close"
-        size="xs"
-        dense
-        :label="schoolYearRef.status === 'open' ? 'Open' : 'Close'"
-        left-label
+        toggle-color="primary"
+        :options="[
+          { label: 'Open', value: 'open' },
+          { label: 'Close', value: 'close' },
+        ]"
+        size="sm"
         @update:model-value="onToggleStatus"
       />
     </q-td>

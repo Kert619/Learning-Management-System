@@ -109,11 +109,15 @@ const toggleLeftDrawer = () => {
 };
 
 const menus: { icon: string; text: string; link: string }[] = [
-  { icon: 'calendar_month', text: 'School Year', link: '/admin/school-years' },
-  { icon: 'mdi-school', text: 'Programs', link: '' },
+  { icon: 'calendar_month', text: 'School Years', link: '/admin/school-years' },
   { icon: 'library_books', text: 'Courses', link: '/admin/courses' },
+  {
+    icon: 'mdi-book-open-page-variant',
+    text: 'Subjects',
+    link: '/admin/subjects',
+  },
   { icon: 'group', text: 'Instructors', link: '' },
-  { icon: 'cable', text: 'Course Assignment', link: '' },
+  { icon: 'mdi-connection', text: 'Course Assignment', link: '' },
 ];
 
 const handleLogout = async () => {

@@ -33,6 +33,10 @@ const routes: RouteRecordRaw[] = [
         path: 'courses',
         component: () => import('pages/Admin/CoursePage.vue'),
       },
+      {
+        path: 'subjects',
+        component: () => import('pages/Admin/SubjectPage.vue'),
+      },
     ],
     beforeEnter: [auth, role],
     meta: {

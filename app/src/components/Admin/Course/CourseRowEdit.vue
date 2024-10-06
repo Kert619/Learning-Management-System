@@ -1,12 +1,7 @@
 <template>
   <q-tr>
     <q-td auto-width>
-      <q-chip
-        icon="mdi-identifier"
-        size="xs"
-        color="primary"
-        :label="courseRef.id"
-      />
+      <q-chip icon="mdi-identifier" size="xs" :label="courseRef.id" />
     </q-td>
     <q-td>
       <q-input

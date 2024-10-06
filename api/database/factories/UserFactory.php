@@ -29,6 +29,16 @@ class UserFactory extends Factory
         ];
     }
 
+    public function default(): static
+    {
+        return $this->state(fn(array $attributes) => [
+            'email' => 'kert@car.info',
+            'role' => 'admin',
+            'email_verified_at' => now()
+        ]);
+    }
+
+
     /**
      * Indicate that the model's email address should be unverified.
      */

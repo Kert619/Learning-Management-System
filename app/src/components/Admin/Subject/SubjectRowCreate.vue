@@ -5,20 +5,20 @@
     </q-td>
     <q-td>
       <q-input
-        v-model="courseRef.course_code"
+        v-model="subjectRef.subject_code"
         dense
         borderless
-        :error="courseRef.errors?.course_code !== undefined"
-        :error-message="courseRef.errors?.course_code?.toString()"
+        :error="subjectRef.errors?.subject_code !== undefined"
+        :error-message="subjectRef.errors?.subject_code?.toString()"
       />
     </q-td>
     <q-td>
       <q-input
-        v-model="courseRef.course_title"
+        v-model="subjectRef.subject_title"
         dense
         borderless
-        :error="courseRef.errors?.course_title !== undefined"
-        :error-message="courseRef.errors?.course_title?.toString()"
+        :error="subjectRef.errors?.subject_title !== undefined"
+        :error-message="subjectRef.errors?.subject_title?.toString()"
       />
     </q-td>
     <q-td auto-width>
@@ -38,14 +38,14 @@
         size="xs"
         icon="mdi-delete"
         color="negative"
-        @click="emit('deleted', courseRef.$guid as string)"
+        @click="emit('deleted', subjectRef.$guid as string)"
       />
     </q-td>
   </q-tr>
 </template>
 
 <script setup lang="ts">
-import { CourseObject } from 'src/stores/course';
+import { SubjectObject } from 'src/stores/subject';
 import { toRef, watch } from 'vue';
 
 const emit = defineEmits<{
@@ -54,26 +54,26 @@ const emit = defineEmits<{
 }>();
 
 const props = defineProps<{
-  course: CourseObject;
+  subject: SubjectObject;
 }>();
 
-const courseRef = toRef(props.course);
+const subjectRef = toRef(props.subject);
 
 const onSaved = () => {
-  emit('saved', courseRef.value.$guid as string);
+  emit('saved', subjectRef.value.$guid as string);
 };
 
 watch(
-  () => courseRef.value.course_code,
+  () => subjectRef.value.subject_code,
   (newVal) => {
-    courseRef.value.course_code = newVal.toUpperCase();
+    subjectRef.value.subject_code = newVal.toUpperCase();
   }
 );
 
 watch(
-  () => courseRef.value.course_title,
+  () => subjectRef.value.subject_title,
   (newVal) => {
-    courseRef.value.course_title = newVal.toUpperCase();
+    subjectRef.value.subject_title = newVal.toUpperCase();
   }
 );
 </script>

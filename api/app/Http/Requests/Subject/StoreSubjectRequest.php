@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Program;
+namespace App\Http\Requests\Subject;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateProgramRequest extends FormRequest
+class StoreSubjectRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +22,9 @@ class UpdateProgramRequest extends FormRequest
      */
     public function rules(): array
     {
-        $id = $this->route('program');
         return [
-            'program_code' => ['required', 'string', 'max:255', Rule::unique('programs', 'program_code')->ignore($id)],
-            'program_title' => ['required', 'string', 'max:255', Rule::unique('programs', 'program_title')->ignore($id)]
+            'subject_code' => ['required', 'string', 'max:255', Rule::unique('subjects', 'subject_code')],
+            'subject_title' => ['required', 'string', 'max:255', Rule::unique('subjects', 'subject_title')]
         ];
     }
 }
